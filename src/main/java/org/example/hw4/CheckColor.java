@@ -29,14 +29,23 @@ public class CheckColor {
   @Test
   public void testColorChange() {
       WebElement salary = webDriver.findElement(By.xpath("//a[@href='https://jobs.dou.ua/salaries/']"));
-    Actions actions = new Actions(webDriver);
-    actions.moveToElement(salary).perform();
-    WebDriverWait wait = new WebDriverWait(webDriver, Duration.ofSeconds(60));
-    WebElement element = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//a[@href='https://jobs.dou.ua/salaries/' and contains(@style, 'color: rgb(255, 0, 0)')]")));
 
-    String colorAfterHover = element.getCssValue("color");
-    String expectedColor = "rgba(255, 0, 0)";
-    Assert.assertEquals(colorAfterHover, expectedColor);
+      Actions actions = new Actions(webDriver);
+      actions.moveToElement(salary).perform();
+
+      WebDriverWait wait = new WebDriverWait(webDriver, Duration.ofSeconds(10));
+      WebElement element = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//a[@href='https://jobs.dou.ua/salaries/']")));
+
+      String colorAfterHover = element.getCssValue("color");
+      String[] rgbValues = colorAfterHover.replace("rgba(", "").replace(")", "").split(",");
+
+      int red = Integer.parseInt(rgbValues[0].trim());
+      int green = Integer.parseInt(rgbValues[1].trim());
+      int blue = Integer.parseInt(rgbValues[2].trim());
+
+      Assert.assertEquals(red, 255, "Red color component is not as expected.");
+      Assert.assertEquals(green, 0, "Green color component is not as expected.");
+      Assert.assertEquals(blue, 0, "Blue color component is not as expected.");
   }
 
 
